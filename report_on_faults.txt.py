@@ -31,7 +31,7 @@ if __name__ == '__main__':
     ALREADY_CONTAINS_N_CHAPTERS = re.compile(r"Already contains (\d+) chapters\.$")
     ERROR_492_TOO_MANY_REQ = r"HTTP Error in FFF '429 Client Error: Too Many Requests for url"
     
-    error_path = r"C:/Users/User/Desktop/calibre_errors.txt"
+    error_path = r"calibre_errors.txt"
     
     KNOWN_ACTIONS = ["Skipped", "Error", "Add", "Update", "Different URL"]
     
