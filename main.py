@@ -161,7 +161,7 @@ if __name__ == '__main__':
                 print("That was the last page. Writing to file now...")
                 break
             
-            if known_urls_on_this_page > 10:
+            if known_urls_on_this_page == 20:
                 print(f"We've found {known_urls_on_this_page} stories that haven't changed on this page. Assuming done...")
                 break
             
