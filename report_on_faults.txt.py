@@ -54,7 +54,7 @@ if __name__ == '__main__':
                 else:
                     specific_counts[action][reason] += 1
             else:
-                specific_counts[action]["Good"] += 1
+                specific_counts[action]["already contains" if action == "skipped" else "good"] += 1
                 
             if action == "Skipped":
                 if ALREADY_CONTAINS_N_CHAPTERS.match(reason):

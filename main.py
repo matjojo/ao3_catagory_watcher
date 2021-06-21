@@ -1,3 +1,4 @@
+import datetime
 import time
 from itertools import count
 
@@ -13,17 +14,21 @@ SLEEP_TIME = 0
 
 # login token, should probably be updated
 COOKIES = {
-    "_otwarchive_session": "ekJLVlYza25rY0Q3cWozbGZVK1RWWjd2cDgrS3J3dXBFbmlZb0Qwb2drZW41Sml4T21xdm96T3lOZjFlVDF6c0k1SHFObHZqMjFBQ3RTSkpQdHY0YTV5ZVY4YnVhVngyVGEwbUx6bFlkby9LQXEySnE4TWNsQ0lxYUpTYXZZaitnQjNnaVBZbjliMXhVZ2dTM25qWFRQbzJ1YkdyaDJMUmVpSlZhRUNPdXpPSlhKOHEzWGp6TFdFdEQyb3NjSVoySVRJMlpqUDVRUVRHTUl4dFdCUVpCQmlpRHl0enhENkM1YnRqV09NcWRkTE8yT1dSdkZZZFV1amJ1b1kvWUExWmc0eWNBSEVpZVdORjBaMzN4WWtCeG92T1RkM1dCV1JUM210SU9MdS9URXJJMEF1SHVJZktsU1BLUVl1SUJ3VTF4L3phQS9LS0piYTF1MDRWait1MXJodGNkVk10Y0NJelZLTVRuUEhSN3pRPS0tZCtwcEpFbnZQVXljWm9HRXhrbDIwZz09--19fa8bf8a01b128d688e908880f3c03cc9f0d3fe",
-    "user_credentials": "1"}
+    "_otwarchive_session": r"a3docUNaL2JNcmg0djFmSG44WC9VdXZ4aFE0bVhBd0VBMDBiaitIOGE0RWw5dWQ5eUwvckd6cXF1UmpVUXRlSzhOUHg1c1BoK3FrcUpvT0JZdkpJTVNEaUlnRmYveTFtcG00VDZhN2djK25EMktOY1NjZzliQUZJd3plbnc1bWErUWlzM1llemFCVVBzb1A5aUNYY0ZxRkx3ZDZkeXZGTXE3MFlsQURiS2VSZW1lcW9heW0wOEdUZXJ6VC9wT1NPNC9zbUpLdUwwcGc5cFdWRlRGNlQ0eVpYbkgxZEtVSGE4am1NNGVVcFpRTnpWU0xTY2Rpbm1VaGt4SVlHUFh1dWdVUzEyelNHTzZ6Z2V0bDNrNUJ2MHFOc3VobHRmMFBML1RkUlJMc3VDR2NxV1NiUlA2UGNMVmY3bldBSlNMR1EtLUZoWTczOXJNYk9NNjFrYXB1aW10a2c9PQ%3D%3D--4abda9dbb323f84f20fbc851c27324344276e0ae",
+    "user_credentials": r"1",
+    "view_adult": r"true",
+    "accepted_tos": "20180523"}
 
 BASE_URLS_WITH_NAME = []
 
-FROZEN_BASE_URL    = "https://archiveofourown.org/tags/Frozen%20(Disney%20Movies)/works?page="
+FROZEN_BASE_URL     = r"https://archiveofourown.org/tags/Frozen%20(Disney%20Movies)/works?page="
 BASE_URLS_WITH_NAME.append((FROZEN_BASE_URL, "Frozen"))
 
-LISTRANGE_BASE_URL = "https://archiveofourown.org/tags/Life%20Is%20Strange%20(Video%20Game)/works?page="
+LISTRANGE_BASE_URL  = r"https://archiveofourown.org/tags/Life%20Is%20Strange%20(Video%20Game)/works?page="
 BASE_URLS_WITH_NAME.append((LISTRANGE_BASE_URL, "Life Is Strange"))
 
+BELLAMIONE_BASE_URL = r"https://archiveofourown.org/works/search?commit=Search&utf8=%E2%9C%93&work_search%5Bbookmarks_count%5D=&work_search%5Bcharacter_names%5D=&work_search%5Bcomments_count%5D=&work_search%5Bcomplete%5D=&work_search%5Bcreators%5D=&work_search%5Bcrossover%5D=&work_search%5Bfandom_names%5D=&work_search%5Bfreeform_names%5D=&work_search%5Bhits%5D=&work_search%5Bkudos_count%5D=&work_search%5Blanguage_id%5D=&work_search%5Bquery%5D=&work_search%5Brating_ids%5D=&work_search%5Brelationship_names%5D=Hermione+Granger%2FBellatrix+Black+Lestrange&work_search%5Brevised_at%5D=&work_search%5Bsingle_chapter%5D=0&work_search%5Bsort_column%5D=revised_at&work_search%5Bsort_direction%5D=desc&work_search%5Btitle%5D=&work_search%5Bword_count%5D=&page="
+BASE_URLS_WITH_NAME.append((BELLAMIONE_BASE_URL, "Bellatrix / Hermione"))
 
 def get_url(base_url: str, page: int) -> str:
     return base_url + str(page)
@@ -116,6 +121,7 @@ def get_url_to_wordcount_dict() -> dict[str, Optional[int]]:
         raise e
 
 if __name__ == '__main__':
+    print(f"Starting check at {datetime.datetime.now()}")
     print("Now reading wordcount dictionary...")
     urls_to_wordcount: dict[str, Optional[int]] = get_url_to_wordcount_dict()
     print("Read wordcount dictionary.")
@@ -129,7 +135,7 @@ if __name__ == '__main__':
     
             page_data = get_page(url)
             if page_data is None:
-                print(f"page_data == none! (for page {url}) Exiting...")
+                print(f"  page_data == none! (for page {url}) Exiting...")
                 break
     
             soup = BeautifulSoup(page_data.content, 'html.parser')
@@ -139,7 +145,7 @@ if __name__ == '__main__':
                 st = story(story_card)
                 url = st.url()
                 words = st.words()
-                
+                if words is None: print(f"  Words for url {url} is None!")
                 # register a new url
                 # cannot read / empty wordcount, assume changed
                 # register a changed story
@@ -155,14 +161,14 @@ if __name__ == '__main__':
                 urls_found_on_this_page += 1
     
     
-            print(f"Parsed page {page_number}, got {urls_found_on_this_page} urls. (changed: {len(new_urls)}, unchanged: {known_urls_in_this_search})")
+            print(f"  Parsed page {page_number}, got {urls_found_on_this_page} urls. (changed: {len(new_urls)}, unchanged: {known_urls_in_this_search})")
             
             if is_last_page(page_data):
-                print("That was the last page. Writing to file now...")
+                print("  That was the last page.")
                 break
             
             if known_urls_on_this_page == 20:
-                print(f"We've found {known_urls_on_this_page} stories that haven't changed on this page. Assuming done...")
+                print(f"  We've found {known_urls_on_this_page} stories that haven't changed on this page. Assuming done...")
                 break
             
             # don't want to scare the servers
@@ -181,3 +187,5 @@ if __name__ == '__main__':
             print("Failed to write urlss:")
             for url in new_urls:
                 print(url)
+    
+    print(f"Finished check at {datetime.datetime.now()}")
