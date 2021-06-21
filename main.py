@@ -19,17 +19,6 @@ COOKIES = {
     "view_adult": r"true",
     "accepted_tos": "20180523"}
 
-BASE_URLS_WITH_NAME = []
-
-FROZEN_BASE_URL     = r"https://archiveofourown.org/tags/Frozen%20(Disney%20Movies)/works?page="
-BASE_URLS_WITH_NAME.append((FROZEN_BASE_URL, "Frozen"))
-
-LISTRANGE_BASE_URL  = r"https://archiveofourown.org/tags/Life%20Is%20Strange%20(Video%20Game)/works?page="
-BASE_URLS_WITH_NAME.append((LISTRANGE_BASE_URL, "Life Is Strange"))
-
-BELLAMIONE_BASE_URL = r"https://archiveofourown.org/works/search?commit=Search&utf8=%E2%9C%93&work_search%5Bbookmarks_count%5D=&work_search%5Bcharacter_names%5D=&work_search%5Bcomments_count%5D=&work_search%5Bcomplete%5D=&work_search%5Bcreators%5D=&work_search%5Bcrossover%5D=&work_search%5Bfandom_names%5D=&work_search%5Bfreeform_names%5D=&work_search%5Bhits%5D=&work_search%5Bkudos_count%5D=&work_search%5Blanguage_id%5D=&work_search%5Bquery%5D=&work_search%5Brating_ids%5D=&work_search%5Brelationship_names%5D=Hermione+Granger%2FBellatrix+Black+Lestrange&work_search%5Brevised_at%5D=&work_search%5Bsingle_chapter%5D=0&work_search%5Bsort_column%5D=revised_at&work_search%5Bsort_direction%5D=desc&work_search%5Btitle%5D=&work_search%5Bword_count%5D=&page="
-BASE_URLS_WITH_NAME.append((BELLAMIONE_BASE_URL, "Bellatrix / Hermione"))
-
 def get_url(base_url: str, page: int) -> str:
     return base_url + str(page)
 
@@ -120,14 +109,25 @@ def get_url_to_wordcount_dict() -> dict[str, Optional[int]]:
         print("Failed to read url dict from file! (Re-raising to prevent removing urls_to_wordcount.)")
         raise e
 
+def get_gallery_url_dict() -> dict[str, str]:
+    try:
+        with open("name_to_url.json", "r") as f:
+            return json.load(f)
+    except ValueError as e:
+        print("Failed to read gallery url dict from file! (Re-raising to prevent issues downstream.)")
+        raise e
+
 if __name__ == '__main__':
     print(f"Starting check at {datetime.datetime.now()}")
     print("Now reading wordcount dictionary...")
     urls_to_wordcount: dict[str, Optional[int]] = get_url_to_wordcount_dict()
-    print("Read wordcount dictionary.")
+    print(f"Read {len(urls_to_wordcount)} wordcounts.")
+    print("Now reading gallery urls...")
+    name_to_url: dict[str, str] = get_gallery_url_dict()
+    print(f"Read {len(name_to_url)} gallery urls")
     
     new_urls: list[str] = []
-    for base_url, url_name in BASE_URLS_WITH_NAME:
+    for url_name, base_url in name_to_url.items():
         print(f"Now searching for {url_name}...")
         known_urls_in_this_search = 0
         for page_number in count(start=1):
