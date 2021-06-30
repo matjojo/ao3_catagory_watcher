@@ -119,9 +119,10 @@ def get_gallery_url_dict() -> dict[str, str]:
 
 if __name__ == '__main__':
     print(f"Starting check at {datetime.datetime.now()}")
-    print("Now reading wordcount dictionary...")
+    print("Reading urls with word counts dictionary...")
     urls_to_wordcount: dict[str, Optional[int]] = get_url_to_wordcount_dict()
-    print(f"Read {len(urls_to_wordcount)} wordcounts.")
+    print(f"Read {len(urls_to_wordcount)} word counts.")
+    
     print("Now reading gallery urls...")
     name_to_url: dict[str, str] = get_gallery_url_dict()
     print(f"Read {len(name_to_url)} gallery urls")
@@ -174,17 +175,18 @@ if __name__ == '__main__':
             # don't want to scare the servers
             time.sleep(SLEEP_TIME)
     
+    print("Saving known urls with word counts to file...")
     save_obj_to_file(urls_to_wordcount)
-    print("Saved known urls to file.")
+    print("Saved known urls with word counts to file.")
     if new_urls:
-        print("Appending new urls to file...")
+        print(f"Appending {len(new_urls)} new urls to file...")
         try:
             with open("undownloaded.txt", "a") as f:
                 for url in new_urls:
                     f.write(url)
                     f.write("\n")
         except IOError:
-            print("Failed to write urlss:")
+            print("Failed to write urls:")
             for url in new_urls:
                 print(url)
     
