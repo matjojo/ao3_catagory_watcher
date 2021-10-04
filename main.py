@@ -179,15 +179,16 @@ if __name__ == '__main__':
     save_obj_to_file(urls_to_wordcount)
     print("Saved known urls with word counts to file.")
     if new_urls:
-        print(f"Appending {len(new_urls)} new urls to file...")
+        uniq_new_urls = set(new_urls)
+        print(f"Found {len(new_urls)} new urls. Of which {len(uniq_new_urls)} unique. Appending to file now...")
         try:
             with open("undownloaded.txt", "a") as f:
-                for url in new_urls:
+                for url in uniq_new_urls:
                     f.write(url)
                     f.write("\n")
         except IOError:
             print("Failed to write urls:")
-            for url in new_urls:
+            for url in uniq_new_urls:
                 print(url)
     
     print(f"Finished check at {datetime.datetime.now()}")
