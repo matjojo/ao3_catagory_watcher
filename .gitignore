@@ -3,3 +3,6 @@
 /calibre_errors.txt
 /name_to_url.json
 /knownUrls.txt
+
+
+__pycache__/*
